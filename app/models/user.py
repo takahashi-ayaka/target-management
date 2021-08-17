@@ -16,7 +16,7 @@ class User(UserMixin, db.Model):
     login_id = Column(String(20), nullable=False, unique=True)
     password = Column(String(20), nullable=False)
     user_name = Column(String(128), nullable=False)
-    email = Column(String(128))
+    # email = Column(String(128))
     authority = Column(Enum(AuthType), nullable=False)
     
     items = relationship('Item', backref='users')
@@ -49,6 +49,24 @@ class User(UserMixin, db.Model):
             
         return validate
     
+    # 新規登録用
+    def validCreate(self):
+        validate = True
+        if not self.login_id:
+            self.errors['login_id'] = 'ログインIDは必須入力です。'
+            validate = False
+        if not self.password:
+            self.errors['password'] = 'パスワードは必須入力です。'
+            validate = False
+        if not self.user_name:
+            self.errors['user_name'] = 'ユーザ名は必須入力です。'
+            validate = False
+        if not self.authority:
+            self.errors['authority'] = '権限は必須入力です。'
+            validate = False
+            
+        return validate
+
     @classmethod
     def get_user_list(self, params):
         # ダサいがこうするしかなく。。。
@@ -58,10 +76,10 @@ class User(UserMixin, db.Model):
                 self.user_name == params['userName']
             )
         
-        if params['email']:
-            users = users.filter(
-                self.email.like("%{}%".format(params['email']))
-            )        
+        # if params['email']:
+        #     users = users.filter(
+        #         self.email.like("%{}%".format(params['email']))
+        #     )        
         # order by 
         users = users.order_by(self.id)
         

@@ -25,5 +25,6 @@ def error_handler(error):
     })
     return response, error.code
 
+## 最初の呼び出し
 if __name__ == "__main__":
     app.run(debug=app.config["DEBUG"], port=app.config["PORT"])

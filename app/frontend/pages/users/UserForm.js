@@ -14,7 +14,6 @@ const initialState = {
   login_id: undefined,
   password: undefined,
   user_name: undefined,
-  email: undefined,
   authority: undefined,
   errors: {}
 }
@@ -29,7 +28,6 @@ const reducer = (state, action) => {
         login_id: action.payload.login_id,
         password: action.payload.password,
         user_name: action.payload.user_name,
-        email: action.payload.email,
         authority: action.payload.authority,
         errors: {},
       };
@@ -69,7 +67,7 @@ const UserForm = (props) => {
       (error) => {
         if (error.response.status === 404 ) {
           // 一旦アラート表示して検索画面に逃してしまう
-          alert("該当ユーザが存在しないよ。");
+          alert("該当ユーザが存在しないよ。。");
           history.push("/users");
         } else {
           // その他はサーバサイドエラーとしてしまう。
@@ -117,13 +115,19 @@ const UserForm = (props) => {
     axios.patch(url, JSON.parse(userJSON))
     .then(
       () => {
-        // 更新できたら詳細画面に飛ばす
-        history.push(`/users/${id}`);
-        setPageMode("show");
+        alert("登録しました。");
+        history.push("/users");
+        // // 更新できたら詳細画面に飛ばす
+        // history.push(`/users/${id}`);
+        // setPageMode("show");
       }
       
     ).catch(
-
+      (error) => {
+        if (error.response.status === 400) {
+          alert("登録できません。");
+        }
+      }
     );
   }
 
@@ -151,7 +155,7 @@ const UserForm = (props) => {
 
   return (
     <main>
-      <h1>ユーザ</h1>
+      <h1>ユーザー詳細</h1>
       <br/>
       <LogoutButton />
       <br/>

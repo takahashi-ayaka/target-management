@@ -61,11 +61,7 @@ def get_user(id):
 @login_required
 def do_confirm(id):
     """
-<<<<<<< HEAD
-        ユーザ情報検証
-=======
-        ユーザ情報取得
->>>>>>> master
+        ユーザ情報
     """
     params = request.get_json()
     print(params);
@@ -90,20 +86,64 @@ def do_update(id):
         ユーザ情報検証
     """
     params = request.get_json()
-    print(params);
+    user = db.session.query(User).get(id)
+    user.login_id = params["user"]["login_id"]
+    user.password = params["user"]["password"]
+    user.user_name = params["user"]["user_name"]
+    db.session.commit()
+    return jsonify({}), 200
+
+@users_bp.route("/api/users/createConfirm", methods=["post"])
+@login_required
+def do_createConfirm():
+    params = request.get_json()
     
     # modeにより分岐
-    if params["mode"] == "edit":
-        # 更新時
-        user = db.session.query(User).get(id)
-        # 値を設定
-        user.set_update_attribute(params)
-        # 検証
-        if not user.valid():
-            # だめなら400で終了
-            return jsonify(user.errors), 400
+    # if params["mode"] == "edit":
+    #     # 更新時
+    #     user = db.session.query(User).get(id)
+    #     # 値を設定
+    #     user.set_update_attribute(params)
+    #     # 検証
+    #     if not user.valid():
+    # else:
+    # 登録済か確認する
+    user = db.session.query(User).filter_by(login_id=params["user"]["login_id"]).all();
+    if user:
+        return jsonify({'login_id': '登録済のユーザーです。'}), 400
+    
+    # DB定義を取得（処理はmodelsの方に書いている）
+    userCreate = User()
 
-        # 値は設定されているのでコミットする
-        db.session.commit()
+    # 取得したパラメータをセットする
+    userCreate.set_update_attribute(params)
+
+    # バリデートチェックを実行
+    if not userCreate.validCreate():
+        # だめなら400で終了
+        return jsonify(userCreate.errors), 400
+
+    return jsonify({}), 200
+
+@users_bp.route("/api/users/create", methods=["post"])
+@login_required
+def do_create():
+    params = request.get_json()
+    print(params);
+    # DB定義を取得（処理はmodelsの方に書いている）
+    userCreate = User()
+
+    # 取得したパラメータをセットする
+    userCreate.set_update_attribute(params)
+
+    # バリデートチェックを実行
+    if not userCreate.validCreate():
+            # だめなら400で終了
+            return jsonify(userCreate.errors), 400
+            # return jsonify(user.errors), 400
+
+    # 値は設定されているのでコミットする
+    db.session.add(userCreate)
+    db.session.commit()
     
     return jsonify({}), 200

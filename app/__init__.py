@@ -19,6 +19,7 @@ def create_app(test_config=None):
         """ import parts """
         from .api import login, memu, items, users
         """ register Blueprints """
+        ## ここに増やす
         app.register_blueprint(login.login_bp)
         app.register_blueprint(memu.menu_bp)
         app.register_blueprint(items.items_bp)
@@ -27,6 +28,7 @@ def create_app(test_config=None):
         # Flask Login
         login_manager = LoginManager()
         login_manager.init_app(app)
+         ##ログインされていない場合はここに遷移
         login_manager.login_view = "login_bp.index"
         
     return app, login_manager

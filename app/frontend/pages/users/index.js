@@ -39,7 +39,7 @@ const Users = () => {
   }
 
   // 検索項目などはいっぱいあったりするかもなので
-  // formでまとめてやる(React Hook Form)
+  // formでまとめてやる(React Hook Form).usestate代わり
   return (
     <main>
       <h1>ユーザ一覧</h1>
@@ -54,24 +54,6 @@ const Users = () => {
               return (
                 <TextField
                   label="ユーザ名"
-                  variant="outlined"
-                  onChange={onChange}
-                  value={value}
-                />
-              );             
-            }
-          }
-        />
-        <Controller
-          name="email"
-          control={control}
-          defaultValue=""
-          render={
-            function render ({ field:{ value, onChange } }) {
-              return (
-                <TextField
-                  style={{marginLeft: "30px"}}
-                  label="メールアドレス"
                   variant="outlined"
                   onChange={onChange}
                   value={value}

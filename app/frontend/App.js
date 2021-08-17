@@ -8,6 +8,7 @@ import Login from "./pages/login";
 import Menu from "./pages/menu";
 import Users from "./pages/users";
 import UserForm from "./pages/users/UserForm";
+import UserCreate from "./pages/users/UserCreate";
 import Items from "./pages/items";
 
 const App = () => {
@@ -19,8 +20,11 @@ const App = () => {
         <Route exact path="/menu" component={Menu} />
         <Route exact path="/users" component={Users} />
         <Route exact path="/users/new" >
-          <UserForm pageMode="new" />
+          <UserCreate pageMode="new" />
         </Route>        
+        <Route exact path="/users/new/edit" >
+          <UserCreate pageMode="new" />
+        </Route>  
         <Route exact path="/users/:id" >
           <UserForm pageMode="show" />
         </Route>
