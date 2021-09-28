@@ -2,6 +2,7 @@ from flask import Flask
 from flask_login import LoginManager
 from db import db
 from .models.user import User
+from .models.car import Car
 
 def create_app(test_config=None):
 
@@ -17,13 +18,15 @@ def create_app(test_config=None):
 
     with app.app_context():
         """ import parts """
-        from .api import login, memu, items, users
+        from .api import login, memu, items, users, car, carCreate
         """ register Blueprints """
         ## ここに増やす
         app.register_blueprint(login.login_bp)
         app.register_blueprint(memu.menu_bp)
         app.register_blueprint(items.items_bp)
         app.register_blueprint(users.users_bp)
+        app.register_blueprint(car.car_bp)
+        app.register_blueprint(carCreate.carCreate_bp)
         
         # Flask Login
         login_manager = LoginManager()

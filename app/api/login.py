@@ -43,7 +43,7 @@ def do_login():
     result = user.first()    
     # ヒットしなかった場合は404
     if not result:
-        return jsonify({'errors': {'invalid': 'ユーザが存在しません。'}}), 404
+        return jsonify({'errors': {'invalid': 'ログインIDまたはパスワードが間違っています。'}}), 404
 
     # ユーザが存在した場合は、一旦雑にsessionに登録
     session['id'] = result.id

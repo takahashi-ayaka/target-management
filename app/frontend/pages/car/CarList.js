@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const UsersList = (props) => {
-  const userList = props.users;
+const CarList = (props) => {
+  const carList = props.car;
   const history = useHistory();
   const classes = useStyles();
 
@@ -39,25 +39,35 @@ const UsersList = (props) => {
       <Table>
         <TableHead>
           <TableRow style={{ backgroundColor: "#D496A5"}}>
-            <TableCell className={classes.cells}>ID</TableCell>
-            <TableCell className={classes.cells}>名前</TableCell>
-            <TableCell className={classes.cells}>権限</TableCell>
+            <TableCell className={classes.cells}>メーカー名</TableCell>
+            <TableCell className={classes.cells}>車種名</TableCell>
+            <TableCell className={classes.cells}>グレード</TableCell>
+            <TableCell className={classes.cells}>ボディカラー</TableCell>
+            <TableCell className={classes.cells}>価格</TableCell>
+            <TableCell className={classes.cells}>ナビ</TableCell>
+            <TableCell className={classes.cells}>革</TableCell>
+            <TableCell className={classes.cells}>サンルーフ</TableCell>
             <TableCell className={classes.cells}>詳細</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {
-            userList.map((user, idx) => (
+            carList.map((car, idx) => (
               <TableRow key={idx}>
-                <TableCell className={classes.body_cells}>{user.id}</TableCell>
-                <TableCell className={classes.body_cells}>{user.user_name}</TableCell>
-                <TableCell className={classes.body_cells}>{user.authority}</TableCell>
+                <TableCell className={classes.body_cells}>{car.maker}</TableCell>
+                <TableCell className={classes.body_cells}>{car.model}</TableCell>
+                <TableCell className={classes.body_cells}>{car.grade}</TableCell>
+                <TableCell className={classes.body_cells}>{car.bodyColor}</TableCell>
+                <TableCell className={classes.body_cells}>￥{car.price.toLocaleString()}</TableCell>
+                <TableCell className={classes.body_cells}>{car.navi == '1' ? '○' : '-'}</TableCell>
+                <TableCell className={classes.body_cells}>{car.kawa == '1' ? '○' : '-'}</TableCell>
+                <TableCell className={classes.body_cells}>{car.sr == '1' ? '○' : '-'}</TableCell>
                 <TableCell className={classes.body_cells}>
                   <Button 
                     type="button"
                     variant="contained" 
                     color="primary"
-                    onClick={() => { history.push(`/users/${user.id}`) }}
+                    onClick={() => { history.push(`/car/${car.carId}`) }}
                   >
                     詳細
                   </Button>
@@ -71,9 +81,9 @@ const UsersList = (props) => {
   );
 }
 // 何故かTSが邪魔しているので
-UsersList.propTypes = {
-  users: any
+CarList.propTypes = {
+  car: any
 }
 
 
-export default React.memo(UsersList);
+export default React.memo(CarList);

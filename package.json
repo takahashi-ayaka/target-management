@@ -57,7 +57,13 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-manifest-plugin": "^3.0.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-brands-svg-icons": "^5.15.4",
+    "@fortawesome/free-regular-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.15"
+  },
   "scripts": {
     "build": "NODE_ENV=production webpack --mode=production -p",
     "dev": "NODE_ENV=development webpack --watch --progress --mode=development --config webpack.config.js",

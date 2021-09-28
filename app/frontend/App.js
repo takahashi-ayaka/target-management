@@ -10,6 +10,11 @@ import Users from "./pages/users";
 import UserForm from "./pages/users/UserForm";
 import UserCreate from "./pages/users/UserCreate";
 import Items from "./pages/items";
+import Car from "./pages/car";
+import CarCreate from "./pages/car/CarCreate";
+import CarForm from "./pages/car/CarForm";
+import CarComplete from "./pages/car/CarComplete";
+import CarSearch from "./pages/car/indexSearch";
 
 const App = () => {
   return (
@@ -32,6 +37,23 @@ const App = () => {
           <UserForm pageMode="edit" />
         </Route>
         <Route exact path="/items" component={Items} />
+        <Route exact path="/carCreate" component={Car} />
+        <Route exact path="/carCreate/new" >
+          <CarCreate pageMode="new" />
+        </Route>        
+        <Route exact path="/carCreate/new/edit" >
+          <CarCreate pageMode="new" />
+        </Route>  
+        <Route exact path="/carCreate/complete" >
+          <CarComplete pageMode="complete" />
+        </Route>        
+        <Route exact path="/car" component={CarSearch} />
+        <Route exact path="/car/:id" >
+          <CarForm pageMode="show" />
+        </Route>
+        <Route exact path="/car/:id/edit" >
+          <CarForm pageMode="edit" />
+        </Route>
       </Switch>
     </BrowserRouter>
   );
