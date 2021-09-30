@@ -8,6 +8,64 @@ import {getErrorCondition, getErroMessage} from "../../common/error"
 import Button from "@material-ui/core/Button";
 
 import { InputLabel, FormControl, FormHelperText, Select, MenuItem } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    container: {
+      // display: 'flex',
+      flexWrap: 'wrap',
+      width: 400,
+      margin: `${theme.spacing(0)} auto`
+    },
+    bar_container: {
+      // display: 'flex',
+      flexWrap: 'wrap',
+      marginLeft: 12,
+      margin: `${theme.spacing(0)} auto`
+    },
+    search__bar: {
+      width: 100,
+      marginLeft: 12,
+      marginTop: 8
+    },
+    menu__bar: {
+      width: 100,
+      marginLeft: 12,
+      marginTop: 8
+    },
+    create__bar: {
+      width: 100,
+      marginLeft: 12,
+      marginTop: 8
+    },
+    title: {
+      padding: "0.25em 0.5em",
+      color: "#797979",
+      borderLeft: "solid 5px #ffaf58"
+    },
+    list: {
+      marginBottom: 10
+    },
+    label: {
+      display: "inline-block",
+      width: 115,
+      lineHeight: "45px"
+    },
+    search__result: {
+      color: "#797979",
+      textAlign: 'center'
+    },
+    btn_submit: {
+      textAlign: 'center',
+      flexWrap: 'wrap',
+      margin: `${theme.spacing(0)} auto`,
+      marginTop: 18
+    }
+  })
+);
 
 // user initialState
 const initialState = {
@@ -39,6 +97,7 @@ const UserCreate = (props) => {
   const history = useHistory();
   const [pageMode, setPageMode] = useState(props.pageMode);
   const readOnly = pageMode !== "confirm" ? false : true;
+  const classes = useStyles();
 
   // user 入力チェック
   const doConfirm = async (data) => {
@@ -101,6 +160,18 @@ const UserCreate = (props) => {
     >戻る</Button>
   );
 
+  const searchButton = (
+    <Button 
+        type="button"
+        variant="contained" 
+        color="primary"
+        onClick={() => { 
+          setPageMode("edit");
+          history.push("/users");
+        }}
+      >検索に戻る</Button>
+    );
+
   const adminSelect = (
     <FormControl
       error={getErrorCondition(state.errors, "authority")}
@@ -138,53 +209,62 @@ const UserCreate = (props) => {
 
   return (
     <main>
-      <h1>ユーザー新規登録</h1>
+      <h1 className={classes.title}><FontAwesomeIcon icon={faUser} color="#96d4d4" size="1x" /> ユーザー新規登録</h1>
       <form onSubmit={handleSubmit(pageMode === "confirm" ? doPost : doConfirm)}>
-        <div style={{marginTop:10}}>
-        <TextControl
-          control={control}
-          name="user_name"
-          label="ユーザ名"
-          value={state.user_name}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "user_name")}
-          helperText={getErroMessage(state.errors, "user_name")}            
-        />
+        <div className={classes.container}>
+          <div className={classes.list}>
+            <span className={classes.label}>ユーザ名</span>
+            <TextControl
+              control={control}
+              name="user_name"
+              label="ユーザ名"
+              value={state.user_name}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "user_name")}
+              helperText={getErroMessage(state.errors, "user_name")}            
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>ログインID</span>
+            <TextControl
+              control={control}
+              name="login_id"
+              label="ログインID"
+              value={state.login_id}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "login_id")}
+              helperText={getErroMessage(state.errors, "login_id")}            
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>パスワード</span>
+            <TextControl
+              control={control}
+              name="password"
+              label="パスワード"
+              value={state.password}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "password")}
+              helperText={getErroMessage(state.errors, "password")}            
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>権限</span>
+            {pageMode === "confirm" ? adminText : adminSelect}
+          </div>
         </div>
-        <div style={{marginTop:10}}>
-        <TextControl
-          control={control}
-          name="login_id"
-          label="ログインID"
-          value={state.login_id}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "login_id")}
-          helperText={getErroMessage(state.errors, "login_id")}            
-        />
-        </div>
-        <div style={{marginTop:10}}>
-        <TextControl
-          control={control}
-          name="password"
-          label="パスワード"
-          value={state.password}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "password")}
-          helperText={getErroMessage(state.errors, "password")}            
-        />
-        </div>
-        <div style={{marginTop:10}}>
-        {pageMode === "confirm" ? adminText : adminSelect}
-        </div>
-        <div style={{marginTop:10}}>
-        {pageMode === "confirm" ? backButton : ""}
-        <Button 
-          type="submit"
-          variant="contained" 
-          color={pageMode === "confirm" ? "secondary" : "primary"}
-        >
+        <div className={classes.btn_submit}>
+          {pageMode === "confirm" ? backButton : ""}
+          <Button 
+            type="submit"
+            variant="contained" 
+            color={pageMode === "confirm" ? "secondary" : "primary"}
+          >
           {pageMode === "confirm" ? "登録" : "確認"}
-        </Button>
+          </Button>
+        </div>
+        <div className={classes.bar_container}>
+        {pageMode === "confirm" ? "" : searchButton}
         </div>
       </form>
     </main>

@@ -10,6 +10,45 @@ import MenuButton from "../../components/MenuButton"
 import Checkbox from '@material-ui/core/Checkbox';
 
 import { InputLabel, FormControl, FormHelperText, Select, MenuItem } from "@material-ui/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCar } from "@fortawesome/free-solid-svg-icons";
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    container: {
+      // display: 'flex',
+      flexWrap: 'wrap',
+      width: 400,
+      margin: `${theme.spacing(0)} auto`
+    },
+    bar_container: {
+      // display: 'flex',
+      flexWrap: 'wrap',
+      marginLeft: 12,
+      margin: `${theme.spacing(0)} auto`
+    },
+    title: {
+      padding: "0.25em 0.5em",
+      color: "#797979",
+      borderLeft: "solid 5px #ffaf58"
+    },
+    list: {
+      marginBottom: 10
+    },
+    label: {
+      display: "inline-block",
+      width: 115,
+      lineHeight: "45px"
+    },
+    btn_submit: {
+      textAlign: 'center',
+      flexWrap: 'wrap',
+      margin: `${theme.spacing(0)} auto`,
+      marginTop: 18
+    }
+  })
+);
 
 // car initialState
 const initialState = {
@@ -47,6 +86,7 @@ const CarCreate = (props) => {
   const [pageMode, setPageMode] = useState(props.pageMode);
   const readOnly = pageMode !== "confirm" ? false : true;
   const check_disabled = pageMode !== "confirm" ? false : true;
+  const classes = useStyles();
 
   // car 入力チェック
   const doConfirm = async (data) => {
@@ -152,121 +192,121 @@ const CarCreate = (props) => {
 
   return (
     <main>
-      <h1>車両情報{pageMode === "confirm" ? "確認" : "登録"}画面</h1>
+      <h1 className={classes.title}><FontAwesomeIcon icon={faCar} color="#96d4d4" size="1x" /> 車両情報{pageMode === "confirm" ? "確認" : "登録"}</h1>
       <form onSubmit={handleSubmit(pageMode === "confirm" ? doPost : doConfirm)}>
-        <div style={{marginTop:10}}>
-        <label>メーカー名　　</label>
-        {pageMode === "confirm" ? makerText : makerSelect}
-        </div>
-        <div style={{marginTop:10}}>
-        <label>車種名　　　　</label>
-        <TextControl
-          control={control}
-          name="model"
-          label="車種名"
-          value={state.model}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "model")}
-          helperText={getErroMessage(state.errors, "model")}
-        />
-        </div>
-        <div style={{marginTop:10}}>
-        <label>グレード　　　</label>
-        <TextControl
-          control={control}
-          name="grade"
-          label="グレード"
-          value={state.grade}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "grade")}
-          helperText={getErroMessage(state.errors, "grade")}
-        />
-        </div>
-        <div style={{marginTop:10}}>
-        <label>ボディカラー　</label>
-        <TextControl
-          control={control}
-          name="bodyColor"
-          label="ボディカラー"
-          value={state.bodyColor}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "bodyColor")}
-          helperText={getErroMessage(state.errors, "bodyColor")}
-        />
-        </div>
-        <div style={{marginTop:10}}>
-        <label>価格　　　　　</label>
-        <TextControl
-          control={control}
-          name="price"
-          label="価格"
-          value={state.price}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "price")}
-          helperText={getErroMessage(state.errors, "price")}
-        />
-        </div>
-        <div style={{marginTop:10}}>
-        <label>ナビ</label>
-        <FormControl disabled={check_disabled}>
-        <Controller
-          render={
-            // eslint-disable-next-line react/display-name
-          ({ field }) => <Checkbox {...field}>
-            checked={state.navi}
-          </Checkbox>
-        }
-          control={control}
-          name="navi"
-          defaultValue={false}
-        />
-        </FormControl>
-        </div>
-        <div>
-        <label>革</label>
-        <FormControl disabled={check_disabled}>
-        <Controller
-          render={
-            // eslint-disable-next-line react/display-name
-          ({ field }) => <Checkbox {...field}>
-            disabled={check_disabled}
-            checked={state.kawa}
-          </Checkbox>
-        }
-          control={control}
-          name="kawa"
-          defaultValue={false}
-        />
-        </FormControl>
-        </div>
-        <div>
-        <label>サンルーフ</label>
-        <FormControl disabled={check_disabled}>
-        <Controller
-          render={
-            // eslint-disable-next-line react/display-name
-          ({ field }) => <Checkbox {...field}>
-            disabled={check_disabled}
-            checked={state.sr}
-          </Checkbox>
-        }
-          control={control}
-          name="sr"
-          defaultValue={false}
-        />
-        </FormControl>
+        <div className={classes.container}>
+          <div className={classes.list}>
+            <span className={classes.label}>メーカー名</span>
+            {pageMode === "confirm" ? makerText : makerSelect}
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>車種名</span>
+            <TextControl
+              control={control}
+              name="model"
+              label="車種名"
+              value={state.model}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "model")}
+              helperText={getErroMessage(state.errors, "model")}
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>グレード</span>
+            <TextControl
+              control={control}
+              name="grade"
+              label="グレード"
+              value={state.grade}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "grade")}
+              helperText={getErroMessage(state.errors, "grade")}
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>ボディカラー</span>
+            <TextControl
+              control={control}
+              name="bodyColor"
+              label="ボディカラー"
+              value={state.bodyColor}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "bodyColor")}
+              helperText={getErroMessage(state.errors, "bodyColor")}
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>価格</span>
+            <TextControl
+              control={control}
+              name="price"
+              label="価格"
+              value={state.price}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "price")}
+              helperText={getErroMessage(state.errors, "price")}
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>オプション</span>
+            <FormControl disabled={check_disabled}>
+            <Controller
+              render={
+                // eslint-disable-next-line react/display-name
+              ({ field }) => <Checkbox {...field}>
+                checked={state.navi}
+              </Checkbox>
+            }
+              control={control}
+              name="navi"
+              defaultValue={false}
+            />
+            </FormControl>
+            <span className={classes.check_label}>ナビ</span>
+            <FormControl disabled={check_disabled}>
+            <Controller
+              render={
+                // eslint-disable-next-line react/display-name
+              ({ field }) => <Checkbox {...field}>
+                disabled={check_disabled}
+                checked={state.kawa}
+              </Checkbox>
+            }
+              control={control}
+              name="kawa"
+              defaultValue={false}
+            />
+            </FormControl>
+            <span className={classes.check_label}>革</span>
+            <FormControl disabled={check_disabled}>
+            <Controller
+              render={
+                // eslint-disable-next-line react/display-name
+              ({ field }) => <Checkbox {...field}>
+                disabled={check_disabled}
+                checked={state.sr}
+              </Checkbox>
+            }
+              control={control}
+              name="sr"
+              defaultValue={false}
+            />
+            </FormControl>
+            <span className={classes.check_label}>サンルーフ</span>
+          </div>
         </div>
 
-        <div style={{marginTop:10}}>
-        {pageMode === "confirm" ? backButton : ""}
-        {pageMode === "confirm" ? "" : <MenuButton />}
-        <Button
-          type="submit"
-          variant="contained" 
-          color="secondary"
-        >
+        <div className={classes.btn_submit}>
+          <Button
+            type="submit"
+            variant="contained" 
+            color="secondary"
+          >
           {pageMode === "confirm" ? "登録" : "確認"}
         </Button>
+        </div>
+        <div className={classes.bar_container}>
+          {pageMode === "confirm" ? backButton : <MenuButton />}
         </div>
       </form>
     </main>
