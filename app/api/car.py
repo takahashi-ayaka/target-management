@@ -100,9 +100,14 @@ def do_update(id):
     """
     params = request.get_json()
     car = db.session.query(Car).get(id)
-    car.login_id = params["car"]["login_id"]
-    car.password = params["car"]["password"]
-    car.user_name = params["car"]["user_name"]
+    car.maker = params["car"]["maker"]
+    car.model = params["car"]["model"]
+    car.grade = params["car"]["grade"]
+    car.bodyColor = params["car"]["bodyColor"]
+    car.price = params["car"]["price"]
+    car.navi = params["car"]["navi"]
+    car.kawa = params["car"]["kawa"]
+    car.sr = params["car"]["sr"]
     db.session.commit()
     return jsonify({}), 200
 

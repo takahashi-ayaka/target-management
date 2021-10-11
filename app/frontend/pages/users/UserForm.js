@@ -4,9 +4,66 @@ import { useHistory, useParams } from "react-router";
 import { useForm } from "react-hook-form";
 import TextControl from "../../components/form/TextControl";
 import UserRegisterButtonControl from "./UserRegisterButtonControl";
-import LogoutButton from "../../components/LogoutButton";
 import axios from "axios";
 import { getErrorCondition, getErroMessage} from "../../common/error"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import MenuButton from "../../components/MenuButton"
+
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    container: {
+      // display: 'flex',
+      flexWrap: 'wrap',
+      width: 400,
+      margin: `${theme.spacing(0)} auto`
+    },
+    bar_container: {
+      // display: 'flex',
+      flexWrap: 'wrap',
+      margin: `${theme.spacing(0)} auto`
+    },
+    search__bar: {
+      width: 100,
+      marginLeft: 12,
+      marginTop: 8
+    },
+    menu__bar: {
+      width: 100,
+      marginLeft: 12,
+      marginTop: 8
+    },
+    create__bar: {
+      width: 100,
+      marginLeft: 12,
+      marginTop: 8
+    },
+    title: {
+      padding: "0.25em 0.5em",
+      color: "#797979",
+      borderLeft: "solid 5px #ffaf58"
+    },
+    list: {
+      marginBottom: 10
+    },
+    label: {
+      display: "inline-block",
+      width: 115,
+      lineHeight: "45px"
+    },
+    search__result: {
+      color: "#797979",
+      textAlign: 'center'
+    },
+    btn_submit: {
+      textAlign: 'center',
+      flexWrap: 'wrap',
+      margin: `${theme.spacing(0)} auto`,
+      marginTop: 18
+    }
+  })
+);
 
 // user initialState
 const initialState = {
@@ -47,6 +104,7 @@ const UserForm = (props) => {
   const {id} = useParams();
   const [state, dispatch] = useReducer(reducer, initialState);
   const history = useHistory();
+  const classes = useStyles();
   const [pageMode, setPageMode] = useState(props.pageMode);
   const readOnly = pageMode === "edit" ? false : true;
   const {control, handleSubmit, reset} = useForm({
@@ -155,66 +213,82 @@ const UserForm = (props) => {
 
   return (
     <main>
-      <h1>ユーザー詳細</h1>
-      <br/>
-      <LogoutButton />
-      <br/>
-      <form onSubmit={handleSubmit(
-        pageMode === "confirm" ? doPost : doConfirm
-      )}>
-        <br/>
-        <br/>
-        <TextControl
-          control={control}
-          name="id"
-          label="ID"
-          value={state.id}
-          readOnly={true}
-        />
-        <br/>
-        <br/>
-        <TextControl
-          control={control}
-          name="login_id"
-          label="ログインID"
-          value={state.login_id}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "login_id")}
-          helperText={getErroMessage(state.errors, "login_id")}            
-        />
-        <br/>
-        <br/>
-        <TextControl
-          control={control}
-          name="password"
-          label="パスワード"
-          value={state.password}
-          readOnly={readOnly}
-          type="password"
-          error={getErrorCondition(state.errors, "password")}
-          helperText={getErroMessage(state.errors, "password")}            
-        />
-        <br/>
-        <br/>
-        <TextControl
-          control={control}
-          name="user_name"
-          label="ユーザ名"
-          value={state.user_name}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "user_name")}
-          helperText={getErroMessage(state.errors, "user_name")}            
-        />
-        <br/>
-        <br/>
-        <UserRegisterButtonControl
-          id={id}
-          pageMode={pageMode}
-          useState={setPageMode}
-          dispatch={dispatch}
-          setDummy={setDummy}  // Material-UIのTextFieldリフレッシュ用useState
-          reset={reset}
-        />
+      <h1 className={classes.title}><FontAwesomeIcon icon={faUser} color="#96d4d4" size="1x" /> ユーザー詳細</h1>
+      <form onSubmit={handleSubmit(pageMode === "confirm" ? doPost : doConfirm)}>
+        <div className={classes.container}>
+          <div className={classes.list}>
+            <span className={classes.label}>ユーザID</span>
+            <TextControl
+              control={control}
+              name="id"
+              label="ID"
+              value={state.id}
+              readOnly={true}
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>ユーザ名</span>
+            <TextControl
+              control={control}
+              name="user_name"
+              label="ユーザ名"
+              value={state.user_name}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "user_name")}
+              helperText={getErroMessage(state.errors, "user_name")}            
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>ログインID</span>
+            <TextControl
+              control={control}
+              name="login_id"
+              label="ログインID"
+              value={state.login_id}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "login_id")}
+              helperText={getErroMessage(state.errors, "login_id")}            
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>パスワード</span>
+            <TextControl
+              control={control}
+              name="password"
+              label="パスワード"
+              value={state.password}
+              readOnly={readOnly}
+              type="password"
+              error={getErrorCondition(state.errors, "password")}
+              helperText={getErroMessage(state.errors, "password")}            
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>権限</span>
+            <TextControl
+              control={control}
+              name="authority"
+              label="権限"
+              value={state.authority}
+              readOnly={true}
+              error={getErrorCondition(state.errors, "authority")}
+              helperText={getErroMessage(state.errors, "authority")}            
+            />
+          </div>
+          <div className={classes.btn_submit}>
+            <UserRegisterButtonControl
+              id={id}
+              pageMode={pageMode}
+              useState={setPageMode}
+              dispatch={dispatch}
+              setDummy={setDummy}  // Material-UIのTextFieldリフレッシュ用useState
+              reset={reset}
+            />
+          </div>
+        </div>
+        <div className={classes.bar_container}>
+          <MenuButton />
+        </div>
       </form>
     </main>
   );

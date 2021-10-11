@@ -23,7 +23,7 @@ const CarRegisterButtonControl = (props) => {
         await reset();
         dispatch({type: "ERROR_CLEAR"});
         useState("show");
-        history.push(`/users/${id}`);
+        history.push(`/car/${id}`);
       }}
     >
       詳細に戻る
@@ -32,14 +32,14 @@ const CarRegisterButtonControl = (props) => {
   const editButton = (
     <Button 
       type="button"
-      variant="contained" 
-      color="primary"
+      variant="contained"
+      color="secondary"
       onClick={() => { 
         useState("edit");
-        history.push(`/users/${id}/edit`);
+        history.push(`/car/${id}/edit`);
       }}
     >
-      更新する
+      編集
     </Button>
   );
   const backButton = (
@@ -49,10 +49,10 @@ const CarRegisterButtonControl = (props) => {
       color="primary"
       onClick={() => { 
         useState("edit");
-        history.push(`/users/${id}/edit`);
+        history.push(`/car/${id}/edit`);
       }}
     >
-      やっぱやめる
+      編集に戻る
     </Button>
   );
   const confirmButton = (
@@ -61,7 +61,7 @@ const CarRegisterButtonControl = (props) => {
       variant="contained" 
       color="secondary"
     >
-      確認する
+      確認
     </Button>
   );
   const updateButton = (
@@ -70,7 +70,7 @@ const CarRegisterButtonControl = (props) => {
       variant="contained" 
       color="secondary"
     >
-      更新！
+      更新
     </Button>
   );
 

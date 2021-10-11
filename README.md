@@ -9,21 +9,21 @@ PythonとReactJSを用いたウェブアプリを構築
 ## 画面構成
 
 * ログイン
-　・ログイン画面
 * メニュー
-　・メニュー画面
-* ユーザー
-　・ユーザ一覧画面
-　・ユーザ検索画面
-　・ユーザ新規登録画面
-　・ユーザ更新画面
-　・ユーザ確認画面(登録/更新)
-* 車両
-　・車両一覧画面
-　・車両検索画面
-　・車両新規登録画面
-　・車両更新画面
-　・車両確認画面(登録/更新)
+* アイテム
+* ユーザ一覧
+* ユーザ検索
+* ユーザ詳細
+* ユーザ新規登録
+* ユーザ更新
+* ユーザ確認(登録/更新)
+* 車両一覧
+* 車両検索
+* 車両詳細
+* 車両新規登録
+* 車両更新
+* 車両確認(登録/更新)
+* 車両完了(登録/更新)
 
 ## 用意するもの
 
@@ -99,44 +99,66 @@ npm run dev
 ├── app
 │   ├── __init__.py
 │   ├── api
-│   │   ├── items.py
+│   │   ├── car.py
+│   │   ├── carCreate.py
+│   │   ├── items.py
 │   │   ├── login.py
-│   │   ├── menu.py
-│   │   ├── users.py
+│   │   ├── memu.py
+│   │   └── users.py
 │   ├── frontend
 │   │   ├── App.js
 │   │   ├── common
-│   │   │   ├── error.js
+│   │   │   └── error.js
 │   │   ├── components
-│   │   │   ├── form
-│   │   │   │   └── TextControl.js
 │   │   │   ├── Item.tsx
-│   │   │   └── ItemList.js
-│   │   │   └── LogoutButton.js
+│   │   │   ├── ItemList.js
+│   │   │   ├── LogoutButton.js
+│   │   │   ├── MenuButton.js
+│   │   │   └── form
+│   │   │       └── TextControl.js
+│   │   ├── constants
 │   │   └── pages
+│   │       ├── car
+│   │       │   ├── CarComplete.js
+│   │       │   ├── CarCreate.js
+│   │       │   ├── CarForm.js
+│   │       │   ├── CarList.js
+│   │       │   ├── CarRegisterButtonControl.js
+│   │       │   ├── index.js
+│   │       │   └── indexSearch.js
 │   │       ├── items
 │   │       │   └── index.js
 │   │       ├── login
 │   │       │   ├── LoginFrom.js
 │   │       │   └── index.js
-│   │       │── menu
+│   │       ├── menu
 │   │       │   └── index.js
 │   │       └── users
-│   │           ├── index.js
 │   │           ├── UserCreate.js
 │   │           ├── UserForm.js
 │   │           ├── UserRegisterButtonControl.js
-│   │           └── UsersList.js
+│   │           ├── UsersList.js
+│   │           └── index.js
 │   ├── models
 │   │   ├── __init__.py
+│   │   ├── car.py
 │   │   ├── item.py
 │   │   ├── login.py
 │   │   └── user.py
+│   ├── public
+│   │   └── static
+│   │       └── image
+│   │           └── cards
+│   │               ├── create.png
+│   │               ├── item.png
+│   │               ├── login.png
+│   │               ├── noda.jpg
+│   │               ├── search.png
+│   │               └── user.png
 │   ├── static
-│   ├── templates
-│   │   ├── dist
-│   │   │   └── bundle.js
-│   │   └── index.html
+│   └── templates
+│       ├── dist
+│       └── index.html
 ├── db
 │   ├── items.sql
 │   └── users.sql

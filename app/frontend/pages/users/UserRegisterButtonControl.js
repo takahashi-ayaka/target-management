@@ -32,14 +32,14 @@ const UserRegisterButtonControl = (props) => {
   const editButton = (
     <Button 
       type="button"
-      variant="contained" 
-      color="primary"
+      variant="contained"
+      color="secondary"
       onClick={() => { 
         useState("edit");
         history.push(`/users/${id}/edit`);
       }}
     >
-      更新する
+      編集
     </Button>
   );
   const backButton = (
@@ -52,7 +52,7 @@ const UserRegisterButtonControl = (props) => {
         history.push(`/users/${id}/edit`);
       }}
     >
-      やっぱやめる
+      編集に戻る
     </Button>
   );
   const confirmButton = (
@@ -61,7 +61,7 @@ const UserRegisterButtonControl = (props) => {
       variant="contained" 
       color="secondary"
     >
-      確認する
+      確認
     </Button>
   );
   const updateButton = (
@@ -70,7 +70,7 @@ const UserRegisterButtonControl = (props) => {
       variant="contained" 
       color="secondary"
     >
-      更新！
+      更新
     </Button>
   );
 

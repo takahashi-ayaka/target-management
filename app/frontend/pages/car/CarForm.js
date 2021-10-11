@@ -1,33 +1,84 @@
 import { any } from "prop-types";
 import React, { useEffect, useReducer, useState } from "react";
 import { useHistory, useParams } from "react-router";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import TextControl from "../../components/form/TextControl";
 import CarRegisterButtonControl from "./CarRegisterButtonControl";
+// import CarRegisterBackButtonControl from "./CarRegisterBackButtonControl";
 import axios from "axios";
+import Checkbox from '@material-ui/core/Checkbox';
 import { getErrorCondition, getErroMessage} from "../../common/error"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCar } from "@fortawesome/free-solid-svg-icons";
+import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { InputLabel, FormControl, FormHelperText, Select, MenuItem } from "@material-ui/core";
+import MenuButton from "../../components/MenuButton";
 
-// user initialState
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    container: {
+      // display: 'flex',
+      flexWrap: 'wrap',
+      width: 400,
+      margin: `${theme.spacing(0)} auto`
+    },
+    bar_container: {
+      // display: 'flex',
+      flexWrap: 'wrap',
+      marginLeft: 12,
+      margin: `${theme.spacing(0)} auto`
+    },
+    title: {
+      padding: "0.25em 0.5em",
+      color: "#797979",
+      borderLeft: "solid 5px #ffaf58"
+    },
+    list: {
+      marginBottom: 10
+    },
+    label: {
+      display: "inline-block",
+      width: 115,
+      lineHeight: "45px"
+    },
+    btn_submit: {
+      textAlign: 'center',
+      flexWrap: 'wrap',
+      margin: `${theme.spacing(0)} auto`,
+      marginTop: 18
+    }
+  })
+);
+
+// car initialState
 const initialState = {
-  id: undefined,
-  login_id: undefined,
-  password: undefined,
-  user_name: undefined,
-  authority: undefined,
+  carId: undefined,
+  maker: undefined,
+  model: undefined,
+  grade: undefined,
+  bodyColor: undefined,
+  price: undefined,
+  navi: undefined,
+  kawa: undefined,
+  sr: undefined,
   errors: {}
 }
 
-// user reducer
+// car reducer
 const reducer = (state, action) => {
 
   switch(action.type) {
-    case "GET_USER":
+    case "GET_CAR":
       return {...state,
-        id: action.payload.id,
-        login_id: action.payload.login_id,
-        password: action.payload.password,
-        user_name: action.payload.user_name,
-        authority: action.payload.authority,
+        carId: action.payload.carId,
+        maker: action.payload.maker,
+        model: action.payload.model,
+        grade: action.payload.grade,
+        bodyColor: action.payload.bodyColor,
+        price: action.payload.price,
+        navi: action.payload.navi,
+        kawa: action.payload.kawa,
+        sr: action.payload.sr,
         errors: {},
       };
     case "CONFIRM":
@@ -42,10 +93,11 @@ const reducer = (state, action) => {
   return state;
 }
 
-const UserForm = (props) => {
+const CarForm = (props) => {
   const {id} = useParams();
   const [state, dispatch] = useReducer(reducer, initialState);
   const history = useHistory();
+  const classes = useStyles();
   const [pageMode, setPageMode] = useState(props.pageMode);
   const readOnly = pageMode === "edit" ? false : true;
   const {control, handleSubmit, reset} = useForm({
@@ -53,21 +105,21 @@ const UserForm = (props) => {
   });
   const [dummy, setDummy] = useState(false); // Material-UIのTextFieldリフレッシュ用useState
 
-  // userデータ取得
-  const getUserInfo = async () => {
-    const url = `/api/users/${id}`;
+  // carデータ取得
+  const getCarInfo = async () => {
+    const url = `/api/car/${id}`;
 
     await axios.get(url).then(
       (response) => {
-        const user = response.data.user;
-        dispatch ({type: 'GET_USER', payload: user})
+        const car = response.data.car;
+        dispatch ({type: 'GET_CAR', payload: car})
       }
     ).catch (
       (error) => {
         if (error.response.status === 404 ) {
           // 一旦アラート表示して検索画面に逃してしまう
           alert("該当ユーザが存在しないよ。。");
-          history.push("/users");
+          history.push("/car");
         } else {
           // その他はサーバサイドエラーとしてしまう。
           history.push('/');
@@ -76,12 +128,12 @@ const UserForm = (props) => {
     )
   }
 
-  // user 入力チェック
+  // car 入力チェック
   const doConfirm = async (data) => {
-    const url = `/api/users/${id}/confirm`;
-    const userJSON = `{"user": ${JSON.stringify(data)}, "mode": "edit"}`
+    const url = `/api/car/${id}/confirm`;
+    const carJSON = `{"car": ${JSON.stringify(data)}, "mode": "edit"}`
 
-    await axios.post(url, JSON.parse(userJSON))
+    await axios.post(url, JSON.parse(carJSON))
     .then(
       () => {
         // エラーをリフレッシュ
@@ -97,7 +149,7 @@ const UserForm = (props) => {
         else if (error.response.status === 404) {
           // 一旦アラート表示して検索画面に逃してしまう
           alert("該当ユーザが存在しないよ。");
-          history.push("/users");
+          history.push("/car");
         } else {
           // その他はサーバサイドエラーとしてしまう。
           history.push('/');
@@ -106,16 +158,16 @@ const UserForm = (props) => {
     );
   }
 
-  // user 登録更新
+  // car 登録更新
   const doPost = async (data) => {
-    const url = `/api/users/${id}/update`;
-    const userJSON = `{"user": ${JSON.stringify(data)}, "mode": "edit"}`
+    const url = `/api/car/${id}/update`;
+    const carJSON = `{"car": ${JSON.stringify(data)}, "mode": "edit"}`
 
-    axios.patch(url, JSON.parse(userJSON))
+    axios.patch(url, JSON.parse(carJSON))
     .then(
       () => {
         alert("登録しました。");
-        history.push("/users");
+        history.push("/car");
         // // 更新できたら詳細画面に飛ばす
         // history.push(`/users/${id}`);
         // setPageMode("show");
@@ -132,7 +184,7 @@ const UserForm = (props) => {
 
   useEffect(() => {
     console.log('**** useEffect ****');
-    getUserInfo(id);
+    getCarInfo(id);
   }, []);
 
   useEffect(() => {
@@ -148,78 +200,181 @@ const UserForm = (props) => {
 
   // 初期レンダリング時はデータが取れていないので
   // RHFの関係上、空レンダリングする
-  if (state.id === undefined){
+  if (state.carId === undefined){
     return <></>;
   }
 
+  const makerSelect = (
+    <FormControl
+      error={getErrorCondition(state.errors, "maker")}
+      style={{minWidth:150}}
+    >        
+      <InputLabel id="demo-simple-select-label">メーカー名</InputLabel>
+      <Controller
+        render={
+          // eslint-disable-next-line react/display-name
+          ({ field }) => <Select {...field}>
+            <MenuItem value={""}>　</MenuItem>
+            <MenuItem value={"トヨタ"}>トヨタ</MenuItem>
+            <MenuItem value={"日産"}>日産</MenuItem>
+            <MenuItem value={"ホンダ"}>ホンダ</MenuItem>
+            <MenuItem value={"三菱"}>三菱</MenuItem>
+            <MenuItem value={"マツダ"}>マツダ</MenuItem>
+            <MenuItem value={"スバル"}>スバル</MenuItem>
+            <MenuItem value={"スズキ"}>スズキ</MenuItem>
+            <MenuItem value={"ダイハツ"}>ダイハツ</MenuItem>
+          </Select>
+        }
+        control={control}
+        name="maker"
+        defaultValue={state.maker}
+      />
+      <FormHelperText>{getErroMessage(state.errors, "maker")}</FormHelperText>
+    </FormControl>
+  );
+
+  const makerText = (
+    <TextControl
+      control={control}
+      name="maker"
+      label="メーカー名"
+      value={state.maker}
+      readOnly={true}
+      error={getErrorCondition(state.errors, "maker")}
+      helperText={getErroMessage(state.errors, "maker")}
+    />
+  );
+  
   return (
     <main>
-      <h1>車両情報詳細画面</h1>
-      <form onSubmit={handleSubmit(
-        pageMode === "confirm" ? doPost : doConfirm
-      )}>
-        <br/>
-        <br/>
-        <TextControl
-          control={control}
-          name="id"
-          label="ID"
-          value={state.id}
-          readOnly={true}
-        />
-        <br/>
-        <br/>
-        <TextControl
-          control={control}
-          name="login_id"
-          label="ログインID"
-          value={state.login_id}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "login_id")}
-          helperText={getErroMessage(state.errors, "login_id")}            
-        />
-        <br/>
-        <br/>
-        <TextControl
-          control={control}
-          name="password"
-          label="パスワード"
-          value={state.password}
-          readOnly={readOnly}
-          type="password"
-          error={getErrorCondition(state.errors, "password")}
-          helperText={getErroMessage(state.errors, "password")}            
-        />
-        <br/>
-        <br/>
-        <TextControl
-          control={control}
-          name="user_name"
-          label="ユーザ名"
-          value={state.user_name}
-          readOnly={readOnly}
-          error={getErrorCondition(state.errors, "user_name")}
-          helperText={getErroMessage(state.errors, "user_name")}            
-        />
-        <br/>
-        <br/>
-        <CarRegisterButtonControl
-          id={id}
-          pageMode={pageMode}
-          useState={setPageMode}
-          dispatch={dispatch}
-          setDummy={setDummy}  // Material-UIのTextFieldリフレッシュ用useState
-          reset={reset}
-        />
+      <h1 className={classes.title}><FontAwesomeIcon icon={faCar} color="#a1d496" size="1x" /> 車両情報
+      {pageMode === "show" && ("詳細")}{pageMode === "edit" && ("更新")}{pageMode === "confirm" && ("更新確認")}
+      </h1>
+      <form onSubmit={handleSubmit(pageMode === "confirm" ? doPost : doConfirm)}>
+        <div className={classes.container}>
+          <div className={classes.list}>
+            <span className={classes.label}>メーカー名</span>
+            {pageMode === "show" ? makerText : makerSelect}
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>車種名</span>
+            <TextControl
+              control={control}
+              name="model"
+              label="車種名"
+              value={state.model}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "model")}
+              helperText={getErroMessage(state.errors, "model")}
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>グレード</span>
+            <TextControl
+              control={control}
+              name="grade"
+              label="グレード"
+              value={state.grade}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "grade")}
+              helperText={getErroMessage(state.errors, "grade")}
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>ボディカラー</span>
+            <TextControl
+              control={control}
+              name="bodyColor"
+              label="ボディカラー"
+              value={state.bodyColor}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "bodyColor")}
+              helperText={getErroMessage(state.errors, "bodyColor")}
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>価格</span>
+            <TextControl
+              control={control}
+              name="price"
+              label="価格"
+              value={state.price}
+              readOnly={readOnly}
+              error={getErrorCondition(state.errors, "price")}
+              helperText={getErroMessage(state.errors, "price")}
+            />
+          </div>
+          <div className={classes.list}>
+            <span className={classes.label}>オプション</span>
+            <FormControl disabled={readOnly}>
+            <Controller
+              render={
+                // eslint-disable-next-line react/display-name
+              ({ field }) => <Checkbox {...field}>
+                checked={state.navi}
+              </Checkbox>
+            }
+              control={control}
+              name="navi"
+              defaultValue={false}
+            />
+            </FormControl>
+            <span className={classes.check_label}>ナビ</span>
+            <FormControl disabled={readOnly}>
+            <Controller
+              render={
+                // eslint-disable-next-line react/display-name
+              ({ field }) => <Checkbox {...field}>
+                disabled={readOnly}
+                checked={state.kawa}
+              </Checkbox>
+            }
+              control={control}
+              name="kawa"
+              defaultValue={false}
+            />
+            </FormControl>
+            <span className={classes.check_label}>革</span>
+            <FormControl disabled={readOnly}>
+            <Controller
+              render={
+                // eslint-disable-next-line react/display-name
+              ({ field }) => <Checkbox {...field}>
+                disabled={readOnly}
+                checked={state.sr}
+              </Checkbox>
+            }
+              control={control}
+              name="sr"
+              defaultValue={false}
+            />
+            </FormControl>
+            <span className={classes.check_label}>サンルーフ</span>
+          </div>
+        </div>
+        <div className={classes.btn_submit}>
+          <CarRegisterButtonControl
+            id={id}
+            pageMode={pageMode}
+            useState={setPageMode}
+            dispatch={dispatch}
+            setDummy={setDummy}  // Material-UIのTextFieldリフレッシュ用useState
+            reset={reset}
+          />
+        </div>
+        <div className={classes.bar_container}>
+          <MenuButton />
+        </div>
       </form>
     </main>
   );
 }
 
 // 何故かTSが邪魔しているので
-UserForm.propTypes = {
+CarForm.propTypes = {
   pageMode: any,
-  location: any
+  location: any,
+  field: any
 }
 
-export default React.memo(UserForm);
+export default React.memo(CarForm);
