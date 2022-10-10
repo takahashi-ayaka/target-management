@@ -1,5 +1,5 @@
 """ login users API """
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, Flask
 from flask_login import login_required
 from db import db
 from ..models.user import User, UserSchema
@@ -30,6 +30,8 @@ def users():
     """
         検索処理 
     """
+    app = Flask(__name__, instance_relative_config=True)
+    app.logger.warning('検索処理')
     params = request.values
     users = User.get_user_list(params)
     

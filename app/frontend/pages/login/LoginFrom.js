@@ -104,9 +104,15 @@ const LoginForm = () => {
     // 画面にマスクとか、ここでstateの初期化とか
     dispatch({ type: 'LOADING' });
 
-    await axios.post(url, {
+
+    let datas = JSON.stringify({
       loginId: loginIdRef.current.value,
       password: passwordRef.current.value,
+    });
+
+    await axios.post(url, datas, {
+      headers: {'Content-Type': 'application/json'},
+      withCredentials: true
     }).then(
       () => {
         // LOADINGでマスクをかけたあと解除したい場合とか

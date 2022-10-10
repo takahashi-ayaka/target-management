@@ -71,6 +71,10 @@ const Users = () => {
       }
     ).catch(
       (error) => {
+        console.log('error');
+        console.log(error);
+        console.log(usersResult);
+        console.log('error');
         if (error.response.status === 404 ) {
           // エラーメッセージを取得
           setSearchResult('検索結果がありませんでした');
@@ -131,10 +135,11 @@ const Users = () => {
       </form>
       <br/>
       {
+        // usersResult.length === 0 ?
         usersResult.length === 0 ?
-        <div className={classes.search__result}>{searchResult}</div>
+          <div className={classes.search__result}>{searchResult}</div>
         :
-        <UsersList users={usersResult} />
+          <UsersList users={usersResult} />
       }
     </main>
   );

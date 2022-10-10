@@ -1,9 +1,13 @@
 from flask import Flask
 from flask_login import LoginManager
+from flask_jwt_extended import JWTManager
 from db import db
 from .models.user import User
 from .models.car import Car
+from flask_cors import CORS
+import os
 
+jwt = JWTManager()
 def create_app(test_config=None):
 
     app = Flask(__name__, instance_relative_config=True)
@@ -13,8 +17,13 @@ def create_app(test_config=None):
     if test_config is not None:
         app.config.from_mapping(test_config)
 
-    # initialize DB Marshmallow
+    # フロントエンドがCookieをAPIに送信できるようにする。
+    CORS(app, resources={
+     '/*': {'origins': os.getenv('FRONTEND_ORIGIN'), 'supports_credentials': True}})
+
+    # initialize jwt Marshmallow
     db.init_app(app)
+    jwt.init_app(app)
 
     with app.app_context():
         """ import parts """
@@ -38,6 +47,13 @@ def create_app(test_config=None):
 
 # Export app
 app, login_manager = create_app()
+
+@app.after_request
+def after_request(response):
+  response.headers.add('Access-Control-Allow-Origin', '*')
+  response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+  response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+  return response
 
 # 認証ユーザの呼び出し
 @login_manager.user_loader

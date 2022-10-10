@@ -7,12 +7,13 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignInAlt } from "@fortawesome/free-solid-svg-icons";
 import { faShoppingBag } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faCar } from "@fortawesome/free-solid-svg-icons";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Grid from '@material-ui/core/Grid';
+import Cookies from 'js-cookie';
+import LogoutButton from "../../components/LogoutButton"
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -22,6 +23,12 @@ const useStyles = makeStyles((theme) =>
     root: {
       textAlign: 'center',
       background: '#ffffe0'
+    },
+    bar_container: {
+      flexWrap: 'wrap',
+      textAlign: 'right',
+      marginRight: '20vh',
+      margin: `${theme.spacing(0)} auto`
     },
     link: {
       textDecoration: 'none'
@@ -39,13 +46,18 @@ const Menu = () => {
   const menuAuthCheck = async () => {
     const url = "/api/menu_auth"
 
-    await axios.get(url)
-    .then(
+    await axios.get(url,{
+      cache: "no-store",
+      credentials: "include",
+      headers:{"X-CSRF-TOKEN" : Cookies.get("csrf_access_token")},
+    }
+    ).then(
       (response) => {
         setIsAdmin(response.data.admin);
       }
     ).catch(
       () => {
+        // @jwt_required()でログインされていない場合401で返却される
         // 状態チェックでエラーになった場合も一旦ログイン画面へ
         history.push("/");
       }
@@ -59,6 +71,9 @@ const Menu = () => {
 
   return (
     <main>
+      <div className={classes.bar_container}>
+        <LogoutButton />
+      </div>
       <div className={classes.main}>
       <Grid container>
       <Grid item xs={4}>
@@ -139,23 +154,6 @@ const Menu = () => {
           :
           <></>
         }
-        <Grid item xs={4}>
-          <Card className={classes.root}>
-            <CardActionArea>
-              <Link to="/" className={classes.link}>
-                <FontAwesomeIcon icon={faSignInAlt} color="#bf96d4" size="6x" />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  ログアウト
-              </Typography>
-                <Typography variant="body2" color="textSecondary" component="p">
-                  ログイン画面に戻ります
-              </Typography>
-              </CardContent>
-              </Link>
-            </CardActionArea>
-          </Card>
-        </Grid>
       </Grid>
       </div>
     </main>
